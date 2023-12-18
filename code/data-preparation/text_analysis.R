@@ -5,7 +5,7 @@ tweets_df=read.csv("../../datasets/english-data.csv")
 # Emoji count
 library(emoji)
 n_emoji=emoji_count(tweets_df$text)
-tweets_df=cbind(tweets_df,n_emoji)
+tweets_df$n_emoji=n_emoji
 # Remove emoji
 tweets_df$text<- replace_emoji(tweets_df$text)
 
