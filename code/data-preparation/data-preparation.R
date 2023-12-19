@@ -22,7 +22,7 @@ tweets_df$multimedial_content <- tweets_df$picture| tweets_df$videos | tweets_df
 # NB: think about making this a multinomial var with categories "picture", "video", "gif"
 
 # Compute engagement rate
-tweets_df$engagement.rate= with(tweets_df,log((1+likes+retweets+comments)/(1+user.followers))*100)
+tweets_df$engagement.rate= with(tweets_df,log((1+likes+retweets+comments)/(1+user.followers)))
 
 
 # Count hashtags
