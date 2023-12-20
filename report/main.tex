@@ -1,8 +1,10 @@
 \documentclass{article}
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath,amssymb}
+\usepackage{amsfonts}
 \usepackage{paralist}
 \usepackage{color}
+\usepackage[table]{xcolor}
 \usepackage{graphicx}
 \usepackage[detect-weight=true, binary-units=true]{siunitx}
 \usepackage{pgfplots}
@@ -10,6 +12,8 @@
 \usepackage{url}
 \usepackage{multirow}
 \usepackage{booktabs}
+\usepackage{blindtext}
+
 
 \title{Introduction to Machine Learning project:\\Twitter food popularity}
 \author[1]{Alessio Gaia}
@@ -36,63 +40,121 @@
 \section{Problem statement}
 \label{sec:problem_statement}
 The aim of this project is to build a Machine Learning system to predict \textit{how popular} a tweet about food will be.
-The data set on which to conduct our analysis is not provided, so we are required to build one.
-
-In a formal manner, given $X$ and $Y$, defined as
-\begin{align*}
-\begin{gathered}
-	X = \{x \mid x \text{ is a tweet about food}\}\\
-	Y = \mathbb{R},
-\end{gathered}
-\end{align*}
-our goal will be to learn a model $m \in M$ from $f'_{learn}$ and use it into $f'_{predict}$ to predict the output variable.
+The dataset on which to conduct our analysis is not provided, so we are required to build one.\\
+Formally, given $X$ and $Y$, defined as X = $\{x \mid x \text{ is a tweet about food}\}$ and Y = $\mathbb{R}$, our goal is to learn a model $m \in M$ from an $f'_{learn}$ and use it into an $f'_{predict}$ to predict the output variable $y$.
 Remember that we define
 \begin{align*}
 \begin{gathered}
-	f'_{learn}: P^{*}(X \times Y) \rightarrow M\\
-	f'_{predict} : X \times M \rightarrow Y.
+	f'_{learn}: P^{*}(X' \times Y) \rightarrow M\\
+	f'_{predict} : X' \times M \rightarrow Y.
 \end{gathered}
-\end{align*}.
-
+\end{align*}
+\textbf{Important note:} $x \in X$, being a tweet, is not directly processable by a machine. Hence, a pre-processing phase $f_{preproc}: X \rightarrow X'$ is required.\\[0.2cm]
 A solution based on a Machine Learning approach is suitable for this assignment: building an $f'_{learn}$ cannot be done by humans, given the nature of the problem (concerning above all complexity of the solution and human cost in dealing with thousands of observation, each with many covariates).
-Furthermore, due to what described above, the model $m \in M$ will not be simple, so performing the prediction in a computer is the only suitable choice.
-
+Furthermore, due to what described above, the model $m \in M$ will not be simple, so performing the prediction in a computer is the only suitable choice.\\
 Given the nature of the problem we are opting for a regression approach and, given also the nature of $X$ and $Y$, we opted for supervised learning techniques.
+
+\textit{Less important note:Due to different programming backgrounds, the project has been implemented using both $R$, for preprocessing and text alaysis, and $Python$, for data gathering and model assessment.}
+
+
+
+\section{Data}
+\label{sec:data}
+
+\subsection{Web scraping}
+We are not going into details of the data-gathering process; to maximaly summarize, we used the Python library \textit{ntscraper} (insert link to reference to documentation), as it allowed us to break through X's new limitation on 1500 downloadable Tweets per month, which could have resulted in too few data. Despite this, due to the computational time of the library, especially when gathering user's information, we collected a total of $4075$ tweets containing the word '\textit{food}' and written in English.
+\subsection{Preprocessing}
+Each observation contains some information about the tweet: text, quotes, is.retweet, external.link, pictures, videos, gifs, multimedial.content and some information about the user: user.image, user.bio, user.website, user.tweets, user.following, user.media.
+Among this variables the numerical ones are: quotes, user.tweets, user.following, user.media and the boolean ones are: is.retweet, external.link, pictures, videos, gifs, multimedial.content, user.image, user.bio, user.website.
+\noindent We implemeted some customed functions to get the number of hashtags and emojis of each text, and we added them as features.\\
+We performed pre-precessing on the text of tweets (conversion to lowercase, removal of punctuation, stemming, removal of stop words). Then we applied tf-idf vectorization of the preprocessed text, since it weight the importance of a word relative to the frequence across all the corpus. (penalizing common words and enhancing less common and more informative words.)
+More precisely, we kept only the words in at least 40 tweets (1\% of total tweets).
+
+
+
+\noindent Regarding the response variable, we opted for the engagement rate, i.e. a measure that keeps count of interaction (likes, comments, retweets) a post receive, over the total number of follower of the account that have published the tweet. In addition we applied a logarithmic transformation, to mitigate the resulting excessive skewness of this variable.
+Formally, we used as output variable the quantity $$y^{(i)} = \ln \left( \frac{1+retweets^{(i)}+likes^{(i)}+comments^{(i)}}{1+followers^{(i)}} \right)$$
+The quantity $1$ added both at numerator and denominator is applied in order not to obtain $-\infty$ or $\infty$ as values.
 
 \section{Assessment and performance indexes}
 \label{sec:assessment_performance_index}
-Recalling that we are dealing with a numerical and continuous output variable $Y$, it's natural to come up with measures like Mean Absolute Error (MAE) and (Root) Mean Squared Error ((R)MSE) to assess the techniques \textit{effectiveness}.
+Recalling that we are dealing with a numerical and continuous output variable $Y$, it's natural to come up with measure like Root Mean Squared Error (RMSE) to assess the techniques \textit{effectiveness}.
 To deal with \textit{efficiency}, instead, we opted to evaluate the execution time of both learning and prediction phase. Times will be measured on the prediction and learning phase of the 10-fold Cross Validation used for assessing the effectiveness of the models.
+
 
 \section{Proposed solution}
 \label{sec:solution}
-After having retrieved the data, we tested five different learning techniques, namely:
-\begin{itemize}
-    \item Dummy regressor;
-    \item Regression tree;
-    \item Random Forest;
-    \item Support Vector Machines;
-    \item k-Nearest Neighbor.
-\end{itemize}
+
+After having retrieved the data, we tested five different learning techniques, namely: (i) Dummy regressor, (ii) Regression tree, (iii) Random Forest, (iv) Support Vector Machines, (v) k-Nearest Neighbor.
+
+\subsection{Hyper-parameter tuning}
 For all of these techniques we applied hyper-parameter tuning, focusing on maximizing the \textit{effectiveness}, so minimizing a measure of error.
 
-In the end we compared the models on \textit{effectiveness} and \textit{efficiency}. (OCCHIO!! SE TENGO COSI' TANTE MISURE DI ERRORE, SU QUALE CONFRONTIAMO I METODI? FORSE MEGLIO SCEGLIERNE UNO E RIMANERE CON QUELLO ANCHE PER HP-TUNING).
+\noindent
+\begin{minipage}{0.5\textwidth}
+    \textbf{Regression Tree:} \\
+    The parameter tuned is $n_{\text{min}}$, the values considered are: 1, 10, 15, 25, 30, 50, 100, 150, 200, 500. The one that minimizes the RMSE is 100.
+\end{minipage}%
+\begin{minipage}{0.5\textwidth}
+    \centering
+    \includegraphics[scale=0.25]{dt_grid_search.png}
+\end{minipage}
 
-\section{Experimental evaluation}
-\label{sec:exp_evaluation}
-Due to different programming backgrounds, the project has been implemented using both $R$, for preprocessing and text alaysis, and $Python$, for data gathering and model assessment.
+\noindent
+\begin{minipage}{0.5\textwidth}
+\textbf{Random Forest:} The parameters tuned are $n_{\text{vars}}$ and $n_{\text{min}}$. The values considered are respectively: 10, 15, 25, 50, 75, 100, 250, 500 and 1, 10, 25, 50, 75, 100. The combination that minimizes the RMSE is $n_{\text{vars}} = 500$, $n_{\text{min}} = 2$.
+\end{minipage}%
+\begin{minipage}{0.5\textwidth}
+    \centering
+    \includegraphics[scale=0.25]{rmse_vs_n_estimators_and_min_samples_split_SURFACE.png}
+\end{minipage}
 
-\subsection{Data}
-\label{sec:data}
-We are not going into details of the data-gathering process, as it's not the requirement of the project. To maximaly summarize, we used the Python library \textit{ntscraper} (insert link to reference to documentation), as it allowed us to break through X's new limitation on 1500 downloadable Tweets per month, which could have resulted in too few data. Despite this, due to the computational time of the library, especially when gathering user's information, we collected a total of $4075$ tweets containing the word '\textit{food}' and written in English. Each observation contains the tweet text, quotes, is.retweet, external.link, pictures, videos, gifs, multimedial.content, user.image, user.bio, user.website, user.tweets, user.following, user.media, engagement.rate, n.hashtag (INSERIRE BREVE DESCTIZIONE DELLE VARIABILI, ANCHE SOLO RAGGRUPPANDOLE PER INFO-TWEET E INFO-USER).
+\noindent 
 
-Regarding the response variable, we opted for the engagement rate, i.e. a measure that keeps count of interaction (likes, comments, retweets) a post received, over the total number of follower of the account that have published the tweet. In addition we applied a logarithmic transformation, to mitigate the resulting excessive skewness of this variable.
-Formally, we used as output variable the quantity $$y^{(i)} = \ln \left( \frac{1+x^{(i)}_{likes}+x^{(i)}_{retweets}+x^{(i)}_{comments}}{1+x^{(i)}_{followers}} \right)$$ (RISCRIVERE LA FORMULA CHE SENNò CI SGAMA SECCO).
-The quantity $1$ added both at numerator and denominator is applied in order not to obtain $-\infty$ or $\infty$ as values.
 
-\subsection{Procedure}
+%\textbf{SVM}
 
-\subsection{Results and discussion}
+\noindent
+\begin{minipage}{0.5\textwidth} %
+\textbf{k-Nearest Neighbor:} \\ The parameter tuned is $n_{neighbors}$, the values considered are: 1, 2, 5, 10, 15, 20, 50, 100. The one that mimimize the RMSE is 20.
+The one that mimimize the RMSE is 100.
+\end{minipage} %
+\begin{minipage}{.55\textwidth} %
+    \centering
+    \includegraphics[scale=0.25]{knn_grid_search.png}
+\end{minipage}
+
+
+
+
+
+\noindent We performed 10 fold cross validation to compare different learning techniques, in order to assess in a robus way both their effectiveness and efficiency.
+\section{Results and discussion}
+
+\begin{tabular}{ccccccc}
+\rowcolor{gray!90} \color{white}{Models} & \color{white}{RMSE} & \color{white}{$RMSE_{mean}$}& \color{white}{$RMSE_{var}$} & \color{white}{T} & \color{white}{$T_{mean}$}& \color{white}{$T_{var}$}\\ 
+\rowcolor{gray!10} Dummy regr. & 50\% &0 & 20\% & 50\% &0 & 20\% \\ 
+
+\rowcolor{white} Regr. tree & 20\% &0 & 20\% & 50\% &0 & 20\%\\ 
+
+\rowcolor{gray!10} Random Forest & 50\% &0 & 20\% & 50\% &0 & 20\%\\ 
+
+\rowcolor{white} SVM & 2\% &0 & 20\% & 50\% &0 & 20\%\\ 
+\rowcolor{gray!10} k-nearest & 50\% &0 & 20\% & 50\% &0 & 20\%\\ 
+
+\end{tabular}
+
+\begin{tabular}{cc}
+\begin{minipage}{.3\textwidth} %
+ciao
+\end{minipage} %
+
+\begin{minipage}{.7\textwidth} %
+\includegraphics[scale=0.3]{dt_grid_search.png}
+\end{minipage}
+
+\end{tabular}
+ESEMPIO PER VEDERE LO SPAZIO CAMBIERA' TUTTO
 
 \bibliographystyle{plain}
 \bibliography{bibliography}
