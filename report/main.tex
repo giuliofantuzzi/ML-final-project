@@ -1,0 +1,100 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb}
+\usepackage{paralist}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage[detect-weight=true, binary-units=true]{siunitx}
+\usepackage{pgfplots}
+\usepackage{authblk}
+\usepackage{url}
+\usepackage{multirow}
+\usepackage{booktabs}
+
+\title{Introduction to Machine Learning project:\\Twitter food popularity}
+\author[1]{Alessio Gaia}
+\author[2]{Carpenè Sara}
+\author[3]{Fantuzzi Giulio}
+\author[4]{Valentinis Alessio}
+\affil[1,2,3,4]{
+    problem statement,
+    solution design,
+    solution development,
+    data gathering,
+    writing
+}
+\date{Course of AA $2023$-$2024$ - Data Science and Artificial Intelligence}
+
+
+
+\begin{document}
+
+\maketitle
+
+
+
+\section{Problem statement}
+\label{sec:problem_statement}
+The aim of this project is to build a Machine Learning system to predict \textit{how popular} a tweet about food will be.
+The data set on which to conduct our analysis is not provided, so we are required to build one.
+
+In a formal manner, given $X$ and $Y$, defined as
+\begin{align*}
+\begin{gathered}
+	X = \{x \mid x \text{ is a tweet about food}\}\\
+	Y = \mathbb{R},
+\end{gathered}
+\end{align*}
+our goal will be to learn a model $m \in M$ from $f'_{learn}$ and use it into $f'_{predict}$ to predict the output variable.
+Remember that we define
+\begin{align*}
+\begin{gathered}
+	f'_{learn}: P^{*}(X \times Y) \rightarrow M\\
+	f'_{predict} : X \times M \rightarrow Y.
+\end{gathered}
+\end{align*}.
+
+A solution based on a Machine Learning approach is suitable for this assignment: building an $f'_{learn}$ cannot be done by humans, given the nature of the problem (concerning above all complexity of the solution and human cost in dealing with thousands of observation, each with many covariates).
+Furthermore, due to what described above, the model $m \in M$ will not be simple, so performing the prediction in a computer is the only suitable choice.
+
+Given the nature of the problem we are opting for a regression approach and, given also the nature of $X$ and $Y$, we opted for supervised learning techniques.
+
+\section{Assessment and performance indexes}
+\label{sec:assessment_performance_index}
+Recalling that we are dealing with a numerical and continuous output variable $Y$, it's natural to come up with measures like Mean Absolute Error (MAE) and (Root) Mean Squared Error ((R)MSE) to assess the techniques \textit{effectiveness}.
+To deal with \textit{efficiency}, instead, we opted to evaluate the execution time of both learning and prediction phase. Times will be measured on the prediction and learning phase of the 10-fold Cross Validation used for assessing the effectiveness of the models.
+
+\section{Proposed solution}
+\label{sec:solution}
+After having retrieved the data, we tested five different learning techniques, namely:
+\begin{itemize}
+    \item Dummy regressor;
+    \item Regression tree;
+    \item Random Forest;
+    \item Support Vector Machines;
+    \item k-Nearest Neighbor.
+\end{itemize}
+For all of these techniques we applied hyper-parameter tuning, focusing on maximizing the \textit{effectiveness}, so minimizing a measure of error.
+
+In the end we compared the models on \textit{effectiveness} and \textit{efficiency}. (OCCHIO!! SE TENGO COSI' TANTE MISURE DI ERRORE, SU QUALE CONFRONTIAMO I METODI? FORSE MEGLIO SCEGLIERNE UNO E RIMANERE CON QUELLO ANCHE PER HP-TUNING).
+
+\section{Experimental evaluation}
+\label{sec:exp_evaluation}
+Due to different programming backgrounds, the project has been implemented using both $R$, for preprocessing and text alaysis, and $Python$, for data gathering and model assessment.
+
+\subsection{Data}
+\label{sec:data}
+We are not going into details of the data-gathering process, as it's not the requirement of the project. To maximaly summarize, we used the Python library \textit{ntscraper} (insert link to reference to documentation), as it allowed us to break through X's new limitation on 1500 downloadable Tweets per month, which could have resulted in too few data. Despite this, due to the computational time of the library, especially when gathering user's information, we collected a total of $4075$ tweets containing the word '\textit{food}' and written in English. Each observation contains the tweet text, quotes, is.retweet, external.link, pictures, videos, gifs, multimedial.content, user.image, user.bio, user.website, user.tweets, user.following, user.media, engagement.rate, n.hashtag (INSERIRE BREVE DESCTIZIONE DELLE VARIABILI, ANCHE SOLO RAGGRUPPANDOLE PER INFO-TWEET E INFO-USER).
+
+Regarding the response variable, we opted for the engagement rate, i.e. a measure that keeps count of interaction (likes, comments, retweets) a post received, over the total number of follower of the account that have published the tweet. In addition we applied a logarithmic transformation, to mitigate the resulting excessive skewness of this variable.
+Formally, we used as output variable the quantity $$y^{(i)} = \ln \left( \frac{1+x^{(i)}_{likes}+x^{(i)}_{retweets}+x^{(i)}_{comments}}{1+x^{(i)}_{followers}} \right)$$ (RISCRIVERE LA FORMULA CHE SENNò CI SGAMA SECCO).
+The quantity $1$ added both at numerator and denominator is applied in order not to obtain $-\infty$ or $\infty$ as values.
+
+\subsection{Procedure}
+
+\subsection{Results and discussion}
+
+\bibliographystyle{plain}
+\bibliography{bibliography}
+
+\end{document}
