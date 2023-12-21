@@ -131,8 +131,10 @@ INSERIRE SVR!!!!!!!!!!!!!!!!!!!!!!!!!
 \noindent We performed 10 fold cross validation to compare different learning techniques, in order to assess in a robus way both their effectiveness and efficiency.
 \section{Results and discussion}
 
-\begin{tabular}{ccccccc}
-\rowcolor{blue!60} \color{white}{Models} & \color{white}{$RMSE_{\mu}$} & \color{white}{$RMSE_{\sigma}$}& \color{white}{$Tlearn_{\mu}$}& \color{white}{$Tlearn_{\sigma}$}& \color{white}{$Tpred_{\mu}$}& \color{white}{$Tpred_{\sigma}$} \\ 
+
+\begin{tabular}{c|cc|cccc|}
+&\multicolumn{2}{>{\columncolor{blue!50}}c|}{\textbf{Effectiveness (RMSE)}} & \multicolumn{4}{>{\columncolor{blue!50}}c|}{\textbf{Efficiency (Time in seconds)}}\\
+\multicolumn{1}{>{\columncolor{blue!50}}c|} {\textbf{Models}} & \multicolumn{1}{>{\columncolor{blue!30}}c} {$\mu$} & \multicolumn{1}{>{\columncolor{blue!30}}c|}{$\sigma$}& \multicolumn{1}{>{\columncolor{blue!30}}c}{$learn_{\mu}$}& \multicolumn{1}{>{\columncolor{blue!30}}c}{$learn_{\sigma}$}& \multicolumn{1}{>{\columncolor{blue!30}}c}{$pred_{\mu}$}& \multicolumn{1}{>{\columncolor{blue!30}}c|}{$pred_{\sigma}$} \\ 
 \rowcolor{gray!10} Dummy &2.549340&0.072147&0.002053&0.000721&0.000400&0.000117 \\ 
 
 \rowcolor{white} Reg. Tree&1.643083&0.078081&0.026919&0.002594&0.001256&0.000230\\ 
@@ -142,6 +144,7 @@ INSERIRE SVR!!!!!!!!!!!!!!!!!!!!!!!!!
 \rowcolor{white} SVR & 2.227806&0.133183&1.582947&0.017643&0.274769&0.003610\\ 
 \rowcolor{gray!10} kNN &2.359671&0.037312&0.006088&0.001386&0.032701&0.030015\\
 \end{tabular}\\[0.5cm]
+
 
 The table above reveals that by using the optimized parameters the best technique to tackle the problem (according to RMSE) is Random Forest. 
 
