@@ -16,11 +16,11 @@
 
 
 \title{Introduction to Machine Learning project:\\Twitter food popularity}
-\author[1]{Alessio Gaia}
-\author[2]{Carpenè Sara}
-\author[3]{Fantuzzi Giulio}
-\author[4]{Valentinis Alessio}
-\affil[1,2,3,4]{
+\author[*]{Alessio Gaia, Carpenè Sara, Fantuzzi Giulio, Valentinis Alessio}
+%\author[2]{Carpenè Sara}
+%\author[3]{Fantuzzi Giulio}
+%\author[4]{Valentinis Alessio}
+\affil[*]{
     problem statement,
     solution design,
     solution development,
@@ -41,20 +41,20 @@
 \label{sec:problem_statement}
 The aim of this project is to build a Machine Learning system to predict \textit{how popular} a tweet about food will be.
 The dataset on which to conduct our analysis is not provided, so we are required to build one.\\
-Formally, given $X$ and $Y$, defined as X = $\{x \mid x \text{ is a tweet about food}\}$ and Y = $\mathbb{R}$, our goal is to learn a model $m \in M$ from an $f'_{learn}$ and use it into an $f'_{predict}$ to predict the output variable $y$.
-Remember that we define
-\begin{align*}
-\begin{gathered}
-	f'_{learn}: P^{*}(X' \times Y) \rightarrow M\\
-	f'_{predict} : X' \times M \rightarrow Y.
-\end{gathered}
-\end{align*}
-\textbf{Important note:} $x \in X$, being a tweet, is not directly processable by a machine. Hence, a pre-processing phase $f_{preproc}: X \rightarrow X'$ is required.\\[0.2cm]
+Formally, given $X$ and $Y$, defined as X = $\{x \mid x \text{ is a tweet about food}\}$ and $Y=\mathbb{R}$, our goal is to learn a model $m \in M$ from an $f'_{learn}: P^{*}(X' \times Y) \rightarrow M$ and use it into an $f'_{predict: X' \times M \rightarrow Y}$ to predict the output variable $y$.\\[0.2cm]
+% Remember that we define
+% \begin{align*}
+% \begin{gathered}
+% 	f'_{learn}: P^{*}(X' \times Y) \rightarrow M\\
+% 	f'_{predict} : X' \times M \rightarrow Y.
+% \end{gathered}
+% \end{align*}
+\textbf{Important note:} $x \in X$, being a tweet, is not directly processable by a machine. Hence, a pre-processing phase $f_{preproc}: X \rightarrow X'$ is required (add link).\\[0.2cm]
 A solution based on a Machine Learning approach is suitable for this assignment: building an $f'_{learn}$ cannot be done by humans, given the nature of the problem (concerning above all complexity of the solution and human cost in dealing with thousands of observation, each with many covariates).
 Furthermore, due to what described above, the model $m \in M$ will not be simple, so performing the prediction in a computer is the only suitable choice.\\
 Given the nature of the problem we are opting for a regression approach and, given also the nature of $X$ and $Y$, we opted for supervised learning techniques.
 
-\textit{Less important note:Due to different programming backgrounds, the project has been implemented using both $R$, for preprocessing and text alaysis, and $Python$, for data gathering and model assessment.}
+% \textit{Less important note:Due to different programming backgrounds, the project has been implemented using both $R$, for preprocessing and text alaysis, and $Python$, for data gathering and model assessment.}
 
 
 
@@ -97,7 +97,7 @@ For all of these techniques we applied hyper-parameter tuning, focusing on maxim
 \end{minipage}%
 \begin{minipage}{0.5\textwidth}
     \centering
-    \includegraphics[scale=0.25]{dt_grid_search.png}
+    \includegraphics[scale=0.35]{dt_grid_search.png}
 \end{minipage}
 
 \noindent
@@ -106,7 +106,7 @@ For all of these techniques we applied hyper-parameter tuning, focusing on maxim
 \end{minipage}%
 \begin{minipage}{0.5\textwidth}
     \centering
-    \includegraphics[scale=0.25]{rmse_vs_n_estimators_and_min_samples_split_SURFACE.png}
+    \includegraphics[scale=0.35]{rmse_vs_n_estimators_and_min_samples_split_SURFACE.png}
 \end{minipage}
 
 \noindent 
@@ -119,12 +119,12 @@ For all of these techniques we applied hyper-parameter tuning, focusing on maxim
 \textbf{k-Nearest Neighbor:} \\ The parameter tuned is $n_{neighbors}$, the values considered are: 1, 2, 5, 10, 15, 20, 50, 100. The one that mimimize the RMSE is 20.
 The one that mimimize the RMSE is 100.
 \end{minipage} %
-\begin{minipage}{.55\textwidth} %
+\begin{minipage}{0.5\textwidth} %
     \centering
-    \includegraphics[scale=0.25]{knn_grid_search.png}
+    \includegraphics[scale=0.35]{knn_grid_search.png}
 \end{minipage}
 
-
+INSERIRE SVR!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
 
@@ -132,31 +132,37 @@ The one that mimimize the RMSE is 100.
 \section{Results and discussion}
 
 \begin{tabular}{ccccccc}
-\rowcolor{gray!90} \color{white}{Models} & \color{white}{RMSE} & \color{white}{$RMSE_{mean}$}& \color{white}{$RMSE_{var}$} & \color{white}{T} & \color{white}{$T_{mean}$}& \color{white}{$T_{var}$}\\ 
-\rowcolor{gray!10} Dummy regr. & 50\% &0 & 20\% & 50\% &0 & 20\% \\ 
+\rowcolor{blue!60} \color{white}{Models} & \color{white}{$RMSE_{\mu}$} & \color{white}{$RMSE_{\sigma}$}& \color{white}{$Tlearn_{\mu}$}& \color{white}{$Tlearn_{\sigma}$}& \color{white}{$Tpred_{\mu}$}& \color{white}{$Tpred_{\sigma}$} \\ 
+\rowcolor{gray!10} Dummy &2.549340&0.072147&0.002053&0.000721&0.000400&0.000117 \\ 
 
-\rowcolor{white} Regr. tree & 20\% &0 & 20\% & 50\% &0 & 20\%\\ 
+\rowcolor{white} Reg. Tree&1.643083&0.078081&0.026919&0.002594&0.001256&0.000230\\ 
 
-\rowcolor{gray!10} Random Forest & 50\% &0 & 20\% & 50\% &0 & 20\%\\ 
+\rowcolor{gray!10} RF &1.376405&0.082878&1.072064&0.017428&0.028506&0.000607\\ 
 
-\rowcolor{white} SVM & 2\% &0 & 20\% & 50\% &0 & 20\%\\ 
-\rowcolor{gray!10} k-nearest & 50\% &0 & 20\% & 50\% &0 & 20\%\\ 
+\rowcolor{white} SVR & 2.227806&0.133183&1.582947&0.017643&0.274769&0.003610\\ 
+\rowcolor{gray!10} kNN &2.359671&0.037312&0.006088&0.001386&0.032701&0.030015\\
+\end{tabular}\\[0.5cm]
 
-\end{tabular}
+The table above reveals that by using the optimized parameters the best technique to tackle the problem (according to RMSE) is Random Forest. 
 
-\begin{tabular}{cc}
-\begin{minipage}{.3\textwidth} %
-ciao
-\end{minipage} %
+Obviously the most efficient method result to be the Dummy classifier, as we could imagine, but it is the most ineffective by far.
+On the contrary, it's interesting to notice how on our analysis SVM performs the worst both in terms of learning and prediction, and it results in one of the worst techniques.
+CITARE WISDOM OF TREES
 
-\begin{minipage}{.7\textwidth} %
-\includegraphics[scale=0.3]{dt_grid_search.png}
-\end{minipage}
+An interesting feature might be to analyze how we can relax the parameters of RF (and trees), to see how this would effect the trade-off between efficiency and effectiveness.
+INSERIRE ANALISI CON PARAMETRI NON OTTIMALI E VEDERE TEMPI ED ERRORE.
+(Anotherone bites the dust)(TADA DUM    DUM    DUM)
 
-\end{tabular}
-ESEMPIO PER VEDERE LO SPAZIO CAMBIERA' TUTTO
+One of the first aspects in which this analysis would get better is of course try and gather more data, which would result in a better and more precise learning phase. In fact, such a small data set would not be fully representative of the system.
+If a larger data set would have been gathered, it would be interesting to perform again some hyper parameter tuning and see if the hierarchy of the techniques hols, or if some of them might gain in effectiveness (especially SVR, we trusted them :( ).
 
+(PENSARE SE INSERIRE CONSIDERAZIONI SUL FATTO CHE STIAMO LAVORANDO SU LINGUAGGIO NATURALE E A SPANNE è UNA MERDA).
+(It is also interesting to inspect how the effectiveness-efficiency trade off changes by relaxing some hyperparameters... )
+\cite{slides}
+
+\newpage
 \bibliographystyle{plain}
 \bibliography{bibliography}
+
 
 \end{document}
